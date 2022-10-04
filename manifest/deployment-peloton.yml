@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peloton-flask
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: peloton-flask
+  template:
+    metadata:
+      labels:
+        app: peloton-flask
+    spec:
+      containers:
+        - name: peloton-flask
+          image: registry.digitalocean.com/westmoreland-registry/peloton:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PELOTON_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: peloton-secrets
+                  key: peloton_username
+            - name: PELOTON_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: peloton-secrets
+                  key: peloton_password
